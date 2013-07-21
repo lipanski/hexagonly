@@ -19,3 +19,6 @@ tmp
 # Ruby version
 .ruby-gemset
 .ruby-version
+
+# Roadmap
+roadmap.txt
