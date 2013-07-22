@@ -21,5 +21,18 @@ module HexagonalTiling
       end
     end
 
+    def to_geojson
+      {
+        :type => "Feature",
+        :geometry => {
+          :type => "Point",
+          :coordinates => [@x, @y]
+        },
+        :properties => {
+          "shape" => "point"
+        }
+      }
+    end
+
   end
 end

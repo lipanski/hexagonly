@@ -1,112 +1,66 @@
 module HexagonalTiling
   class Hexagon
 
-    attr_reader :radius, :center, :points
+    attr_reader :center, :h_size, :v_size, :space
 
-    # @param [Float] radius
-    # @param [Point] center
-    # @param [Space] space the space of points
-    # @param [Integer] prev_dir the previous direction of expansion
-    def initialize(radius, center, space, prev_dir = nil)
-      @radius, @center, @space, @prev_dir = radius, center, space, prev_dir
-      @points = nil
-      grab
+    # @param [Number] h_size the horizontal size of the hexagon (width / 2) 
+    def initialize(center, h_size, space)
+      @center, @h_size, @space = center, h_size, space
+      @v_size = @h_size * Math.cos(30)
     end
 
-    # Grabs from the space all points contained within the hexagon and removes 
-    # those points from the initial space.
-    def grab
-      @points = @space.points.select{ |p| loosely_contains?(p) }
-      @points = @points.select{ |p| contains?(p) }
-      @space.remove_points(@points)
-    end
+    def contains?(point)
+      q2 = HexagonTiling::Point.new((point.x - @center.x).abs, (point.y - @center.y).abs)
 
-    def expand(dir = nil)
-      hexagons = []
-
-      case dir
-      when :north
-        new_center = Point.new(@center.x, @center.y + @radius * 2)
-        hex = Hexagon.new(@radius, new_center, @space.north_of(@center), dir)
-        hexagons += hex.expand
-      when :south
-        new_center = Point.new(@center.x, @center.y - @radius * 2)
-        hex = Hexagon.new(@radius, new_center, @space.south_of(@center), dir)
-        hexagons += hex.expand
+      if q2.x > @h_size * 2 || q2.y > @v_size
+        return false
       else
-        case prev_dir
-        when :north
-          
-        when :south
-
-        when :north_west
-
-        when :north_east
-
-        when :south_west
-
-        when :south_east
-
-        end
+        return @v_size * 2 * @h_size - @v_size * q2.x - 2 * @h_size * q2.y >= 0
       end
 
-      hexagons
+      # const q2x:Number = Math.abs(_x – _center.x);
+      # const q2y:Number = Math.abs(_y – _center.y);
+      # if (q2x > _hori*2 || q2y > _vert) return false;
+      # return _vert * 2* _hori – _vert * q2x – 2* _hori * q2y >= 0;
     end
 
-    # Checks whether the given point belongs to the hexagon.
-    def contains?(point)
-      # TODO
+    # @return [Array<HexagonTiling::Point>] an array of points, coresponding to the 6 corners of the hexagon
+    def corners
+      corners = []
+      (0..5).each do |i|
+        angle = 2 * Math::PI / 6 * i
+        corner_x = @center.x + @h_size * Math.cos(angle)
+        corner_y = @center.y + @h_size * Math.sin(angle)
+        corners << HexagonTiling::Point.new(x, y)
+      end
+
+      corners
     end
 
-    # Checks whether the given point belongs to the bounding box of the hexagon.
-    def loosely_contains?(point)
-      width_ok = point.x >= (@center.x - @radius) && point.x <= (@center.x + @radius)
-      height_ok = point.y >= (@center.y - @radius) && point.y <= (@center.y + @radius)
-
-      width_ok && height_ok
+    def to_geojson
+      corner_points = corners.map{ |p| [p.x, p.y] }
+      corner_points << corner_points.last
+      {
+        :type => "Feature",
+        :geometry => {
+          :type => "Polygon",
+          :coordinates => corner_points
+        },
+        :properties => {
+          "shape" => "hexagon"
+        }
+      }
     end
 
-    private
-
-    def northern_space
-
-    end
-
-    def western_space
-
-    end
-
-    def southern_space
-
-    end
-
-    def eastern_space
-
-    end
-
-    def expand_north
-
-    end
-
-    def expand_north_west
-
-    end
-
-    def expand_south_west
-
-    end
-
-    def expand_south
-
-    end
-
-    def expand_south_east
-
-    end
-
-    def expand_north_east
-
-    end
-
+    # for (i = 0; i <= 6; i++) {
+    #   angle = 2 * PI / 6 * i;
+    #   x_i = center_x + size * cos(angle);
+    #   y_i = center_y + size * sin(angle);
+    #   if (i == 0) {
+    #       moveTo(x_i, y_i);
+    #   } else {
+    #       lineTo(x_i, y_i);
+    #   }
+    # }
   end
 end
