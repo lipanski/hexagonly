@@ -28,9 +28,7 @@ module HexagonalTiling
           :type => "Point",
           :coordinates => [@x, @y]
         },
-        :properties => {
-          "shape" => "point"
-        }
+        :properties => nil
       }
     end
 
