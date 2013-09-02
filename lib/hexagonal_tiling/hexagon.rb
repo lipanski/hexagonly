@@ -6,10 +6,13 @@ module HexagonalTiling
     # @param [Number] size the size of the hexagon (width / 2) 
     def initialize(center, size, space = nil)
       @center, @size, @space = center, size, space
-      @v_size = @size * (1 - Math.cos(30))
+      @v_size = @size * (1.0 - Math.cos(30))
       super(corners)
     end
 
+    # Checks whether the given point lies within the hexagon.
+    #
+    # @return [true|false]
     def contains?(point)
       if loosely_contains?(point)
         super
@@ -19,25 +22,27 @@ module HexagonalTiling
     end
 
     # Checks whether the given point lies within the bounding box of the hexagon.
+    #
+    # @return [true|false]
     def loosely_contains?(point)
       ((point.x - @center.x).abs <= @size) && ((point.y - @center.y).abs <= @size)
     end
 
-    # Returns the hexagon to the north-east with the same radius.
+    # Returns a hexagon to the north-east with the same radius.
     def north_east_hexagon
       north_east_center = HexagonalTiling::Point.new(@center.x + @size * 1.5, @center.y + @v_size)
       HexagonalTiling::Hexagon.new(north_east_center, @size, @space)
     end
 
-    # Returns the hexagon to the south-east with the same radius.
+    # Returns a hexagon to the south-east with the same radius.
     def south_east_hexagon
       south_east_center = HexagonalTiling::Point.new(@center.x + @size * 1.5, @center.y - @v_size)
       HexagonalTiling::Hexagon.new(south_east_center, @size, @space)
     end
 
-    # Returns the hexagon to the south with the same radius.
+    # Returns a hexagon to the south with the same radius.
     def south_hexagon
-      south_center = HexagonalTiling::Point.new(@center.x, @center.y - @v_size * 2)
+      south_center = HexagonalTiling::Point.new(@center.x, @center.y - @v_size * 2.0)
       HexagonalTiling::Hexagon.new(south_center, @size, @space)
     end
 
@@ -56,6 +61,8 @@ module HexagonalTiling
 
     protected
 
+    # Returns an array of 6 points marking the corners of the hexagon.
+    #
     # @return [Array<HexagonTiling::Point>] an array of points, coresponding to the 6 corners of the hexagon
     def corners
       corners = []

@@ -12,4 +12,5 @@ factory = HexagonalTiling::HexagonFactory.new(0.15, points)
 hexagons = factory.pack_space
 
 geo = HexagonalTiling::GeoJson.new(hexagons)
+geo.add_features(points)
 puts geo.to_json
