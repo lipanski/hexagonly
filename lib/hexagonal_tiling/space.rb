@@ -30,7 +30,7 @@ module HexagonalTiling
       Space.new(@points.select{ |p| p.x > point.x })
     end
 
-    private
+    protected
 
     def refresh
       compute_boundries

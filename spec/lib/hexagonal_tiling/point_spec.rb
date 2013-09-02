@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'factories'
 
 describe HexagonalTiling::Point do
   
@@ -7,6 +8,14 @@ describe HexagonalTiling::Point do
       p = HexagonalTiling::Point.new(10, 15)
       p.x.should == 10
       p.y.should == 15
+    end
+  end
+
+  context "test factory_girl" do
+    it "raises error" do
+      points = build_list(:point, 20)
+      geo = HexagonalTiling::GeoJson.new(points)
+      puts geo.to_json
     end
   end
 
