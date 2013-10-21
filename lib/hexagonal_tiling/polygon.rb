@@ -15,14 +15,14 @@ module HexagonalTiling
       is_inside = false
       old_p = @poly_points.last
       @poly_points.each do |new_p|
-        if new_p.x > old_p.x
+        if new_p.x_coord > old_p.x_coord
           first_p = old_p
           second_p = new_p
         else
           first_p = new_p
           second_p = old_p
         end
-        if ((new_p.x < point.x) == (point.x <= old_p.x)) && ((point.y - first_p.y) * (second_p.x - first_p.x) < (second_p.y - first_p.y) * (point.x - first_p.x))
+        if ((new_p.x_coord < point.x_coord) == (point.x_coord <= old_p.x_coord)) && ((point.y_coord - first_p.y_coord) * (second_p.x_coord - first_p.x_coord) < (second_p.y_coord - first_p.y_coord) * (point.x_coord - first_p.x_coord))
           is_inside = ! is_inside
         end
         old_p = new_p

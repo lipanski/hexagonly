@@ -25,29 +25,29 @@ module HexagonalTiling
     #
     # @return [true|false]
     def loosely_contains?(point)
-      ((point.x - @center.x).abs <= @size) && ((point.y - @center.y).abs <= @size)
+      ((point.x_coord - @center.x_coord).abs <= @size) && ((point.y_coord - @center.y_coord).abs <= @size)
     end
 
     # Returns a hexagon to the north-east with the same radius.
     def north_east_hexagon
-      north_east_center = HexagonalTiling::Point.new(@center.x + @size * 1.5, @center.y + @v_size)
+      north_east_center = HexagonalTiling::Point.new(@center.x_coord + @size * 1.5, @center.y_coord + @v_size)
       HexagonalTiling::Hexagon.new(north_east_center, @size, @space)
     end
 
     # Returns a hexagon to the south-east with the same radius.
     def south_east_hexagon
-      south_east_center = HexagonalTiling::Point.new(@center.x + @size * 1.5, @center.y - @v_size)
+      south_east_center = HexagonalTiling::Point.new(@center.x_coord + @size * 1.5, @center.y_coord - @v_size)
       HexagonalTiling::Hexagon.new(south_east_center, @size, @space)
     end
 
     # Returns a hexagon to the south with the same radius.
     def south_hexagon
-      south_center = HexagonalTiling::Point.new(@center.x, @center.y - @v_size * 2.0)
+      south_center = HexagonalTiling::Point.new(@center.x_coord, @center.y_coord - @v_size * 2.0)
       HexagonalTiling::Hexagon.new(south_center, @size, @space)
     end
 
     def to_geojson
-      corner_points = corners.map{ |p| [p.x, p.y] }
+      corner_points = corners.map{ |p| [p.x_coord, p.y_coord] }
       corner_points << corner_points.last
       {
         :type => "Feature",
@@ -61,15 +61,15 @@ module HexagonalTiling
 
     protected
 
-    # Returns an array of 6 points marking the corners of the hexagon.
+    # Returns an array of the 6 points defining the corners of the hexagon.
     #
     # @return [Array<HexagonTiling::Point>] an array of points, coresponding to the 6 corners of the hexagon
     def corners
       corners = []
       (0..5).each do |i|
         angle = 2 * Math::PI / 6 * i
-        corner_x = @center.x + @size * Math.cos(angle)
-        corner_y = @center.y + @size * Math.sin(angle)
+        corner_x = @center.x_coord + @size * Math.cos(angle)
+        corner_y = @center.y_coord + @size * Math.sin(angle)
         corners << HexagonalTiling::Point.new(corner_x, corner_y)
       end
 

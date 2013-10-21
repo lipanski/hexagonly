@@ -1,5 +1,6 @@
 require 'hexagonal_tiling/version'
 
+require 'hexagonal_tiling/has_coordinates'
 require 'hexagonal_tiling/point'
 require 'hexagonal_tiling/space'
 require 'hexagonal_tiling/polygon'
@@ -11,6 +12,10 @@ module HexagonalTiling
 
   class << self
     
+    def pack_points(size, points)
+      HexagonalTiling::HexagonFactory.pack_points(size, points)
+    end
+
   end
 
 end

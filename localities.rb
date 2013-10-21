@@ -1,3 +1,5 @@
+# bundle exec ruby localities.rb | xclip -selection clipboard
+
 require 'hexagonal_tiling'
 require 'csv'
 

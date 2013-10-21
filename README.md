@@ -1,6 +1,7 @@
 # HexagonalTiling
 
 Provides helper classes for performing regular, flat-topped hexagonal tiling.
+**Work in progress**
 
 ## Installation
 
