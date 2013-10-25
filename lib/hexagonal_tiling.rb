@@ -1,6 +1,5 @@
 require 'hexagonal_tiling/version'
 
-require 'hexagonal_tiling/has_coordinates'
 require 'hexagonal_tiling/point'
 require 'hexagonal_tiling/space'
 require 'hexagonal_tiling/polygon'
