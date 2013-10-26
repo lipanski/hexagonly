@@ -32,7 +32,7 @@ describe HexagonalTiling::Point do
     end
 
     context "when .set_coord_names WAS used" do
-      context "if given coordinate variables / methods are not defined" do
+      context "if given coordinate methods are not defined" do
         before(:all) do
           class TestPoint
             include HexagonalTiling::Point::Methods
@@ -45,7 +45,7 @@ describe HexagonalTiling::Point do
         it { expect {subject.y_coord}.to raise_error(NoMethodError) }
       end
 
-      context "if given coordinate variables / methods are defined" do
+      context "if given coordinate methods are defined" do
         before(:all) do
           class TestPoint
             include HexagonalTiling::Point::Methods

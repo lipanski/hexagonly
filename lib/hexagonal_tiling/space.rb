@@ -8,49 +8,8 @@ module HexagonalTiling
       @points = points
       refresh
     end
-
-    def remove_points(points)
-      @points -= points
-      refresh
-    end
-
-    # Builds a new Space object containing all points of the current space
-    # that lie north of a given point.
-    #
-    # @param [HexagonalTiling::Point] point the boundry point for the new space
-    # @return [HexagonalTiling::Space]
-    def north_of(point)
-      Space.new(@points.select{ |p| p.y_coord >= point.y_coord })
-    end
-
-    # Builds a new Space object containing all points of the current space
-    # that lie west of a given point.
-    #
-    # @param [HexagonalTiling::Point] point the boundry point for the new space
-    # @return [HexagonalTiling::Space]
-    def west_of(point)
-      Space.new(@points.select{ |p| p.x_coord <= point.x_coord })
-    end
-
-    # Builds a new Space object containing all points of the current space
-    # that lie south of a given point.
-    #
-    # @param [HexagonalTiling::Point] point the boundry point for the new space
-    # @return [HexagonalTiling::Space]
-    def south_of(point)
-      Space.new(@points.select{ |p| p.y_coord < point.y_coord })
-    end
-
-    # Builds a new Space object containing all points of the current space
-    # that lie east of a given point.
-    #
-    # @param [HexagonalTiling::Point] point the boundry point for the new space
-    # @return [HexagonalTiling::Space]
-    def east_of(point)
-      Space.new(@points.select{ |p| p.x_coord > point.x_coord })
-    end
-
-    protected
+    
+    private
 
     def refresh
       compute_boundries

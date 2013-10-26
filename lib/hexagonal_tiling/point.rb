@@ -18,7 +18,13 @@ module HexagonalTiling
     #     def initialize(a, b); @a, @b = a, b; end
     #     
     #   end
+    #   
+    #   p = MyPoint.new(1, 2)
+    #   p.x_coord # => 1
+    #   p.y_coord # => 2
     module Methods
+
+      include Comparable
 
       def self.included(base)
         base.extend(ClassMethods)
@@ -27,29 +33,40 @@ module HexagonalTiling
       module ClassMethods
         attr_accessor :x_coord_method_name, :y_coord_method_name
 
-        def x_coord_method(x_coord_method_name)
-          self.x_coord_method_name = x_coord_method_name.to_sym
+        def x_coord_method(x_method)
+          self.x_coord_method_name = x_method.to_sym
         end
 
-        def y_coord_method(y_coord_method_name)
-          self.y_coord_method_name = y_coord_method_name.to_sym
+        def y_coord_method(y_method)
+          self.y_coord_method_name = y_method.to_sym
         end
 
-        def x_y_coord_methods(x_coord_method_name, y_coord_method_name)
-          x_coord_method(x_coord_method_name)
-          y_coord_method(y_coord_method_name)
+        def x_y_coord_methods(x_method, y_method)
+          x_coord_method(x_method)
+          y_coord_method(y_method)
         end
       end
 
       def x_coord
-        send(self.class.x_coord_method_name || :x)
+        send(self.class.x_coord_method_name || 'x')
+      end
+
+      def x_coord=(value)
+        send("#{self.class.x_coord_method_name || 'x'}=", value)
       end
 
       def y_coord
-        send(self.class.y_coord_method_name || :y)
+        send(self.class.y_coord_method_name || 'y')
       end
 
-      include Comparable
+      def y_coord=(value)
+        send("#{self.class.y_coord_method_name || 'y'}=", value)
+      end
+
+      def set_coords(x, y)
+        self.x_coord = x
+        self.y_coord = y
+      end
 
       def <=>(another_point)
         if x_coord == another_point.x_coord && y_coord == another_point.y_coord
@@ -62,9 +79,9 @@ module HexagonalTiling
       end
 
       # Enable implicit splat.
-      def to_ary
-        [x_coord, y_coord]
-      end
+      # def to_ary
+      #   [x_coord, y_coord]
+      # end
 
       def to_geojson
         {
@@ -81,10 +98,10 @@ module HexagonalTiling
 
   include Methods
 
-  attr_reader :x, :y
+  attr_accessor :x, :y
   
   def initialize(x, y)
-    @x, @y = x, y
+    set_coords(x, y)
   end
 
   end

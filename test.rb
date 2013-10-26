@@ -1,20 +1,17 @@
-class Test
-  module Methods
-    def hello
-      puts "hello"
-    end
-  end
+require_relative 'lib/hexagonal_tiling'
 
-  include Methods
+class TestPoly
 
-  def initialize
-    puts "init"
+  include HexagonalTiling::Polygon::Methods
+  poly_points_method :custom_poly_points
+
+  attr_reader :custom_poly_points
+  def initialize(points)
+    @custom_poly_points = points
   end
 end
 
-class SecondTest
-  include Test::Methods
-end
-
-Test.new.hello
-SecondTest.new.hello
+t = TestPoly.new([1, 2, 3])
+puts t.custom_poly_points.to_s
+puts t.class.poly_points_method_name
+puts t.poly_points.to_s

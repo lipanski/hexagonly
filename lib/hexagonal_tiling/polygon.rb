@@ -25,19 +25,20 @@ module HexagonalTiling
       module ClassMethods
         attr_accessor :poly_points_method_name
 
-        def poly_points_method(poly_points_method_name)
-          self.poly_points_method_name = poly_points_method_name.to_sym
+        def poly_points_method(points_method)
+          self.poly_points_method_name = points_method.to_sym
         end
       end
 
       def poly_points
+        raise NoMethodError if self.class.poly_points_method_name.nil?
         send(self.class.poly_points_method_name)
       end
 
       # Crossing count algorithm for determining whether a point lies within a 
       # polygon or not. Source: http://www.visibone.com/inpoly/
       def contains?(point)
-        raise "Not a valid polygon!" if poly_points.size < 3
+        raise "Not a valid polygon!" if poly_points.nil? || poly_points.size < 3
         
         is_inside = false
         old_p = poly_points.last
@@ -62,7 +63,7 @@ module HexagonalTiling
 
     include Methods
 
-    attr_reader :poly_points
+    attr_accessor :poly_points
 
     # @param [Array<HexagonalTiling::Point>] poly_points the points that make up the polygon
     def initialize(poly_points)
