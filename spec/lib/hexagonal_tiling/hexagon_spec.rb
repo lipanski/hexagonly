@@ -79,11 +79,58 @@ describe HexagonalTiling::Hexagon do
 
   describe "#grab" do
 
-    
+    context "when none of the points belong to the hexagon" do
+      let(:rejected_points) { [[5, 8], [5, 4], [2, 6], [8, 6], [3.3, 7], [6.7, 5]].map{ |x, y| HexagonalTiling::Point.new(x, y) } }
+      subject do
+        hex = HexagonalTiling::Hexagon.new(HexagonalTiling::Point.new(5, 6), 2.1)
+        hex.grab(rejected_points)
+        hex
+      end
+      it { subject.collected_points.class.should == Array }
+      it { subject.collected_points.size.should == 0 }
+      it { subject.rejected_points.class.should == Array }
+      it { subject.rejected_points.should == rejected_points }
+    end
+
+    context "when some of the points belong to the hexagon" do
+      let(:accepted_points) { [[5.1, 6.2], [4.2, 5.3], [5.0, 6.0]].map{ |x, y| HexagonalTiling::Point.new(x, y) } }
+      let(:rejected_points) { [[5, 8], [5, 4], [2, 6], [8, 6], [3.3, 7], [6.7, 5]].map{ |x, y| HexagonalTiling::Point.new(x, y) } }
+      subject do
+        hex = HexagonalTiling::Hexagon.new(HexagonalTiling::Point.new(5, 6), 2.1)
+        hex.grab(accepted_points + rejected_points)
+        hex
+      end
+      it { subject.collected_points.class.should == Array }
+      it { subject.collected_points.should == accepted_points }
+      it { subject.rejected_points.class.should == Array }
+      it { subject.rejected_points.should == rejected_points }
+    end
+
+    context "when all of the points belong to the hexagon" do
+      let(:accepted_points) { [[5.1, 6.2], [4.2, 5.3], [5.0, 6.0]].map{ |x, y| HexagonalTiling::Point.new(x, y) } }
+      subject do
+        hex = HexagonalTiling::Hexagon.new(HexagonalTiling::Point.new(5, 6), 2.1)
+        hex.grab(accepted_points)
+        hex
+      end
+      it { subject.collected_points.class.should == Array }
+      it { subject.collected_points.should == accepted_points }
+      it { subject.rejected_points.class.should == Array }
+      it { subject.rejected_points.size.should == 0 }
+    end
 
   end
 
-  describe ".pack_points" do
+  describe ".pack" do
+
+    context "when using default classes" do
+      let(:points) { 100.times.map{ build(:point) } }
+      let(:hex_size) { 0.15 }
+      subject { HexagonalTiling::Hexagon.pack(points, hex_size, { grab_points: true }) }
+      it { subject.class.should == Array }
+      it { subject.each{ |hex| hex.collected_points.each{ |p| hex.contains?(p).should == true } } } 
+      it { subject.inject([]){ |arr, hex| arr += hex.collected_points }.size.should == points.size }
+    end
 
   end
 

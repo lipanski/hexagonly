@@ -63,6 +63,10 @@ module HexagonalTiling
         send("#{self.class.y_coord_method_name || 'y'}=", value)
       end
 
+      # Sets the coordinates for the current Point.
+      #
+      # @param x [Float]
+      # @param y [Float]
       def set_coords(x, y)
         self.x_coord = x
         self.y_coord = y
@@ -100,8 +104,9 @@ module HexagonalTiling
 
   attr_accessor :x, :y
   
-  def initialize(x = nil, y = nil)
-    set_coords(x, y) unless x.nil? || y.nil?
+  # (see #set_coords)
+  def initialize(*coords)
+    set_coords(*coords) if coords.size == 2
   end
 
   end

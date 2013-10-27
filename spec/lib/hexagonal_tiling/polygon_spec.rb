@@ -64,15 +64,31 @@ describe HexagonalTiling::Polygon do
       it { expect { HexagonalTiling::Polygon.new(points).contains?(HexagonalTiling::Point.new(1, 2)) }.to raise_error Exception }
     end
 
-    context "when the polygon has 3 or more points" do
-      let(:points) { [[4, 4], [5, 6], [3, 8], [8, 8], [7, 4]].map{ |p| HexagonalTiling::Point.new(p[0], p[1]) } }
-      subject { HexagonalTiling::Polygon.new(points) }
+    context "when the polygon has 3 or more points and a simple poly was given" do
+      # See Wolfram Alpha: (4, 4)(5, 6)(3, 8)(8, 8)(7, 4) polygon
+      let(:simple_poly_points) { [[4, 4], [5, 6], [3, 8], [8, 8], [7, 4]].map{ |p| HexagonalTiling::Point.new(p[0], p[1]) } }
+      subject { HexagonalTiling::Polygon.new(simple_poly_points) }
       it { subject.contains?(HexagonalTiling::Point.new(4, 6)).should == false }
       it { subject.contains?(HexagonalTiling::Point.new(6, 6)).should == true }
       it { subject.contains?(HexagonalTiling::Point.new(3, 3)).should == false }
       it { subject.contains?(HexagonalTiling::Point.new(6, 7.99)).should == true }
       it { subject.contains?(HexagonalTiling::Point.new(8, 6)).should == false }
       it { subject.contains?(HexagonalTiling::Point.new(-6, -6)).should == false }
+    end
+
+    context "when the polygon has 3 or more points and a messed up poly was given" do
+      # See Wolfram Alpha: (4, 6)(8, 7)(7, 3)(5, 9)(8, 9)(4.2, 2)(5, 4) polygon
+      let(:messed_up_poly_points) { [[4, 6], [8, 7], [7, 3], [5, 9], [8, 9], [4.2, 2], [5, 4]].map{ |p| HexagonalTiling::Point.new(p[0], p[1]) } }
+      subject { HexagonalTiling::Polygon.new(messed_up_poly_points) }
+      it { subject.contains?(HexagonalTiling::Point.new(8, 6)).should == false }
+      it { subject.contains?(HexagonalTiling::Point.new(4, 4)).should == false }
+      it { subject.contains?(HexagonalTiling::Point.new(4.3, 7)).should == false }
+      it { subject.contains?(HexagonalTiling::Point.new(7, 8)).should == true }
+      it { subject.contains?(HexagonalTiling::Point.new(5.1, 4)).should == true }
+      it { subject.contains?(HexagonalTiling::Point.new(6, 4.2)).should == false }
+      it { subject.contains?(HexagonalTiling::Point.new(6, 5)).should == false }
+      it { subject.contains?(HexagonalTiling::Point.new(4.9, 3.5)).should == true }
+      it { subject.contains?(HexagonalTiling::Point.new(6, 6.2)).should == false }
     end
 
   end

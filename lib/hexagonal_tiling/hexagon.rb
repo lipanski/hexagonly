@@ -33,16 +33,21 @@ module HexagonalTiling
 
         # Starting from the north-east corner of the given Points array and going east, 
         # then repeating for every other row to the south, the method generates an 
-        # array of hexagons. Every hexagon created on the way grabs all the points
-        # contained within.
+        # array of hexagons. If params[:grab_points] is true, every hexagon created 
+        # on the way grabs all the points contained within.
         #
-        # @param points [Array<HexagonalTiling::Point>]
-        # @param hex_size [Float] the size of the hexagon (width / 2)
+        # @param points [Array<HexagonalTiling::Point>] the boundries for the generated hexagons
+        #   or an Array of points that will be "grabed" by the generated hexagons 
+        #   (see @params[:grap_points])
+        # @param hex_size [Float] the size of the generated hexagons (width / 2)
+        # @param [Hash] params additional parameters
+        # @option params [false, true] :grab_points wether to "grab" points - 
+        #   stores included points unter hex#collected_points and excluded points
+        #   under hex#rejected_points
+        # @option params [Class] :hexagon_class the class used to instanciate new hexagons
         #
         # @return [Array<HexagonalTiling::Hexagon] an array of hexagons
-        #
-        # @throws ArgumentError in case size is not an Integer
-        def pack_points(points, hex_size, params = {})
+        def pack(points, hex_size, params = {})
           return [] if points.nil? || points.empty?
 
           hexagons = []
@@ -53,20 +58,21 @@ module HexagonalTiling
 
           point_class = points.first.class
           hexagon_class = params.fetch(:hexagon_class, HexagonalTiling::Hexagon)
+          grab_points = params.fetch(:grab_points, false)
 
           north_west = point_class.new.tap{ |p| p.set_coords(space.west.x_coord, space.north.y_coord) }
-          hexagons << hex = hexagon_class.new.tap{ |h| h.setup_hex(north_west, hex_size); h.grab(points) }
+          hexagons << hex = hexagon_class.new.tap{ |h| h.setup_hex(north_west, hex_size); h.grab(points) if grab_points }
           v_hexagon_count.times do |i|
             first_hex = hex
             h_hexagon_count.times do |j|
               if j % 2 == 0
-                hexagons << hex = hex.north_east_hexagon
+                hexagons << hex = hex.north_east_hexagon(params)
               else
-                hexagons << hex = hex.south_east_hexagon
+                hexagons << hex = hex.south_east_hexagon(params)
               end
             end
 
-            hexagons << hex = first_hex.south_hexagon if i < v_hexagon_count - 1
+            hexagons << hex = first_hex.south_hexagon(params) if i < v_hexagon_count - 1
           end
 
           hexagons
@@ -74,8 +80,12 @@ module HexagonalTiling
 
       end
 
-      attr_accessor :hex_center, :hex_size, :hex_points, :hex_rejected_points
+      attr_accessor :hex_center, :hex_size
 
+      # Initializes the hexagon.
+      #
+      # @param hex_center [HexagonalTiling::Point] the center of the hexagon
+      # @param hex_size [Float] the size of the hexagon (horizontal width / 2)
       def setup_hex(hex_center, hex_size)
         @hex_center, @hex_size = hex_center, hex_size
       end
@@ -104,41 +114,43 @@ module HexagonalTiling
         ((point.x_coord - @hex_center.x_coord).abs <= @hex_size) && ((point.y_coord - @hex_center.y_coord).abs <= hex_v_size)
       end
 
-      # Grabs all points within the hexagon boundries from an array of Points
-      # and appends them to @hex_points. All rejected Points are stored under
-      # @hex_rejected_points.
-      #
-      # @param points [Array<HexagonalTiling::Point>]
-      #
-      # @return [Array<HexagonalTiling::Point] the grabed points
-      def grab(points)
-        parts = points.partition{ |p| contains?(p) }
-        @hex_points ||= []
-        @hex_points += parts[0]
-        @hex_rejected_points = parts[1]
-
-        parts[0]
-      end
-
       # Returns a hexagon to the north-east with the same radius.
-      def north_east_hexagon
+      def north_east_hexagon(params = {})
         raise "Call #setup_hex first!" if @hex_center.nil? || @hex_size.nil?
+
+        grab_points = params.fetch(:grab_points, false)
+
         north_east_center = hex_point_class.new(@hex_center.x_coord + @hex_size * 1.5, @hex_center.y_coord + hex_v_size)
-        self.class.new.tap{ |hex| hex.setup_hex(north_east_center, @hex_size); hex.grab(@hex_rejected_points) }
+        self.class.new.tap do |hex| 
+          hex.setup_hex(north_east_center, @hex_size)
+          hex.grab(@rejected_points) if grab_points
+        end
       end
 
       # Returns a hexagon to the south-east with the same radius.
-      def south_east_hexagon
+      def south_east_hexagon(params = {})
         raise "Call #setup_hex first!" if @hex_center.nil? || @hex_size.nil?
+
+        grab_points = params.fetch(:grab_points, false)
+
         south_east_center = hex_point_class.new(@hex_center.x_coord + @hex_size * 1.5, @hex_center.y_coord - hex_v_size)
-        self.class.new.tap{ |hex| hex.setup_hex(south_east_center, @hex_size); hex.grab(@hex_rejected_points) }
+        self.class.new.tap do |hex| 
+          hex.setup_hex(south_east_center, @hex_size)
+          hex.grab(@rejected_points) if grab_points
+        end
       end
 
       # Returns a hexagon to the south with the same radius.
-      def south_hexagon
+      def south_hexagon(params = {})
         raise "Call #setup_hex first!" if @hex_center.nil? || @hex_size.nil?
+
+        grab_points = params.fetch(:grab_points, false)
+
         south_center = hex_point_class.new(@hex_center.x_coord, @hex_center.y_coord - hex_v_size * 2.0)
-        self.class.new.tap{ |hex| hex.setup_hex(south_center, @hex_size); hex.grab(@hex_rejected_points) }
+        self.class.new.tap do |hex| 
+          hex.setup_hex(south_center, @hex_size)
+          hex.grab(@rejected_points) if grab_points
+        end
       end
 
       # Returns an array of the 6 points defining the corners of the hexagon.
@@ -181,9 +193,9 @@ module HexagonalTiling
 
     include Methods
 
-    # @param [Number] hex_size the size of the hexagon (width / 2) 
-    def initialize(hex_center = nil, hex_size = nil)
-      setup_hex(hex_center, hex_size) unless hex_center.nil? || hex_size.nil?
+    # (see #setup_hex)
+    def initialize(*params)
+      setup_hex(*params) if params.size == 2
     end
 
   end

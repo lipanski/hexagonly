@@ -72,11 +72,19 @@ require_relative 'lib/hexagonal_tiling/point'
 require_relative 'lib/hexagonal_tiling/polygon'
 require_relative 'lib/hexagonal_tiling/hexagon'
 
-module Test
-  extend self
-  def bla
-    puts "bla"
+
+
+class Test
+  def initialize(*args)
+    puts args.to_s
+    bla(*args)
+  end
+
+  def bla(a, b, c)
+    puts a
+    puts b
+    puts c
   end
 end
 
-Test.bla
+Test.new(:a, :b, :c)

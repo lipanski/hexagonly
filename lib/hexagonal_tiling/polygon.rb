@@ -30,13 +30,17 @@ module HexagonalTiling
         end
       end
 
+      attr_accessor :collected_points, :rejected_points
+
       def poly_points
         raise NoMethodError if self.class.poly_points_method_name.nil?
+
         send(self.class.poly_points_method_name)
       end
 
       # Crossing count algorithm for determining whether a point lies within a 
-      # polygon or not. Source: http://www.visibone.com/inpoly/
+      # polygon. Ported from http://www.visibone.com/inpoly/inpoly.c.txt
+      # (original C code by Bob Stein & Craig Yap).
       def contains?(point)
         raise "Not a valid polygon!" if poly_points.nil? || poly_points.size < 3
 
@@ -57,6 +61,22 @@ module HexagonalTiling
         end
 
         is_inside
+      end
+
+      # Grabs all points within the polygon boundries from an array of Points
+      # and appends them to @collected_points. All rejected Points are stored 
+      # under @rejected_points (if you want to pass the to other objects).
+      #
+      # @param points [Array<HexagonalTiling::Point>]
+      #
+      # @return [Array<HexagonalTiling::Point] the grabed points
+      def grab(points)
+        parts = points.partition{ |p| contains?(p) }
+        @collected_points ||= []
+        @collected_points += parts[0]
+        @rejected_points = parts[1]
+
+        parts[0]
       end
 
     end
