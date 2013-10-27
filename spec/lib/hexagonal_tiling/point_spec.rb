@@ -1,9 +1,11 @@
 require 'spec_helper'
 
 describe HexagonalTiling::Point do
+  
   describe "#x_coord and #y_coord" do
     
     context "when .set_coord_names WAS NOT used" do
+
       context "if #x and #y are not defined" do
         before(:all) do
           class TestPoint
@@ -29,9 +31,11 @@ describe HexagonalTiling::Point do
         it { subject.x_coord.should == 1 }
         it { subject.y_coord.should == 2 }
       end
+
     end
 
     context "when .set_coord_names WAS used" do
+
       context "if given coordinate methods are not defined" do
         before(:all) do
           class TestPoint
@@ -59,7 +63,9 @@ describe HexagonalTiling::Point do
         it { subject.x_coord.should == 1 }
         it { subject.y_coord.should == 2 }
       end
+      
     end
 
   end
+
 end

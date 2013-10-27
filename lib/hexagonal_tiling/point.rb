@@ -100,8 +100,8 @@ module HexagonalTiling
 
   attr_accessor :x, :y
   
-  def initialize(x, y)
-    set_coords(x, y)
+  def initialize(x = nil, y = nil)
+    set_coords(x, y) unless x.nil? || y.nil?
   end
 
   end

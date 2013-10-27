@@ -1,9 +1,11 @@
 require 'spec_helper'
 
 describe HexagonalTiling::Polygon do
+
   describe "#poly_points" do
 
     context "when .poly_points_method WAS NOT used" do
+
       context "if #poly_points is not defined" do
         before(:all) do
           class TestPolyWithoutPolyPoints
@@ -29,9 +31,11 @@ describe HexagonalTiling::Polygon do
         it { subject.class.should == Array }
         it { should == points }
       end
+
     end
 
     context  "when .poly_points_method WAS used" do
+
       context "if given method is defined" do
         before(:all) do
           class TestPolyWithCustomMethod
@@ -47,11 +51,13 @@ describe HexagonalTiling::Polygon do
         it { subject.poly_points.class.should == Array }
         it { subject.poly_points.should == points }
       end
+
     end
 
   end
 
-  describe ".contains?" do
+  describe "#contains?" do
+
     context "when the polygon has less than 3 points" do
       let(:points) { 2.times.map( build(:point)) }
       it { expect { HexagonalTiling::Polygon.new(nil).contains?(HexagonalTiling::Point.new(1, 2)) }.to raise_error Exception }
@@ -68,5 +74,7 @@ describe HexagonalTiling::Polygon do
       it { subject.contains?(HexagonalTiling::Point.new(8, 6)).should == false }
       it { subject.contains?(HexagonalTiling::Point.new(-6, -6)).should == false }
     end
+
   end
+  
 end

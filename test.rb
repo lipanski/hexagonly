@@ -1,17 +1,82 @@
-require_relative 'lib/hexagonal_tiling'
+class Polygon
+  module Methods
+    def self.included(base)
+      base.extend(ClassMethods)
+    end
 
-class TestPoly
+    module ClassMethods
+      attr_accessor :poly_method
+      
+      def set_poly_method(method)
+        @poly_method = method
+      end
+    end
 
-  include HexagonalTiling::Polygon::Methods
-  poly_points_method :custom_poly_points
+    def poly
+      send(self.class.poly_method)
+    end
 
-  attr_reader :custom_poly_points
-  def initialize(points)
-    @custom_poly_points = points
+    def poly_test
+      puts "poly_test"
+    end
+  end
+
+  include Methods
+end
+
+class Hexagon
+  module Methods
+    include Polygon::Methods
+    
+    def self.included(base)
+      base.extend(Polygon::ClassMethods)
+      base.set_poly_method :hexa_poly
+      base.extend(ClassMethods)
+    end
+
+    module ClassMethods
+      attr_accessor :hexa_method
+
+      def set_hexa_method(method)
+        @hexa_method = method
+      end
+    end
+
+    def hexa
+      send(self.class.hexa_method)
+    end
+
+    def hexa_poly
+      puts "hexa_poly"
+    end
+
+    def contains
+      puts "polygon contains"
+    end
+  end
+
+  include Methods
+  set_hexa_method :hexa_hexa
+
+  def hexa_hexa
+    puts "hexa_hexa"
+  end
+
+  def contains
+    puts "hexagon contains"
+    super
   end
 end
 
-t = TestPoly.new([1, 2, 3])
-puts t.custom_poly_points.to_s
-puts t.class.poly_points_method_name
-puts t.poly_points.to_s
+require_relative 'lib/hexagonal_tiling/point'
+require_relative 'lib/hexagonal_tiling/polygon'
+require_relative 'lib/hexagonal_tiling/hexagon'
+
+module Test
+  extend self
+  def bla
+    puts "bla"
+  end
+end
+
+Test.bla

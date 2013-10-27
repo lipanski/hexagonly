@@ -10,7 +10,7 @@ localities_csv.first(100).each do |row|
   points << HexagonalTiling::Point.new(row[2].to_f, row[1].to_f)
 end
 
-hexagons = HexagonalTiling::HexagonFactory.pack_space(0.15, points)
+hexagons = HexagonalTiling::Hexagon.pack_points(points, 0.15)
 
 geo = HexagonalTiling::GeoJson.new(hexagons)
 geo.add_features(points)

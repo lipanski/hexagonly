@@ -39,7 +39,7 @@ module HexagonalTiling
       # polygon or not. Source: http://www.visibone.com/inpoly/
       def contains?(point)
         raise "Not a valid polygon!" if poly_points.nil? || poly_points.size < 3
-        
+
         is_inside = false
         old_p = poly_points.last
         poly_points.each do |new_p|
