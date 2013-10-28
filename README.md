@@ -120,11 +120,11 @@ The ``poly_points_method`` method defaults to ``:poly_points``.
 
 Hexagons inherit all methods of Polygons. There are 2 ways of creating new Hexagons:
 
-1. By using the pre-defined ``Hexagony::Hexagon`` class:
+1. By using the pre-defined ``Hexagonly::Hexagon`` class:
    
   ```ruby
   center = Hexagonly::Point.new(4, 4)
-  hexagon = Hexaonly::Hexagon.new(center, 1.5)
+  hexagon = Hexagonly::Hexagon.new(center, 1.5)
 
   puts hexagon.hex_corners # => corners...
   puts hexagon.contains?(center) # => true
@@ -215,11 +215,11 @@ puts hexagons[0].collected_points[0].class # => Hexagonly::Point or your custom 
 While tiling and grabbing objects, you can also mix classes in your ``points`` collection, as long as they are
 compatible with ``Hexagonly::Point`` methods:
 
-```
+```ruby
 class Salami
   include Hexagonly::Point::Methods
 
-  # x_y_coord_methods defaults to :x and :y
+  # .x_y_coord_methods defaults to :x and :y
   attr_accessor :x, :y
   def initialize(x, y)
     @x, @y = x, y
