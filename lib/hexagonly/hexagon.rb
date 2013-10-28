@@ -51,7 +51,7 @@ module Hexagonly
         #
         # @return [Array<Hexagonly::Hexagon] an array of hexagons
         def pack(points, hex_size, params = {})
-          return [] if points.nil? || points.empty?
+          return [] if points.nil? || points.empty? || points.size < 2
 
           hexagons = []
           space = Hexagonly::Space.new(points)

@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Florin Lipan"]
   spec.email         = ["lipanski@gmail.com"]
   spec.description   = %q{Hexagonal tiling in Ruby.}
-  spec.summary       = %q{Provides helper classes for performing regular, flat-topped hexagonal tiling and other polygon operations.}
+  spec.summary       = %q{Provides helper classes for performing regular, flat-topped hexagonal tiling and other polygon-related operations.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
