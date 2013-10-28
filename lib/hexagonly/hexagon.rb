@@ -1,4 +1,4 @@
-module HexagonalTiling
+module Hexagonly
   class Hexagon
     
     # Adds Hexagon methods to an object.
@@ -6,7 +6,7 @@ module HexagonalTiling
     # @example
     #   class MyHexagon
     #     
-    #     include HexagonalTiling::Hexagon::Methods
+    #     include Hexagonly::Hexagon::Methods
     #     
     #     def initialize(center, size)
     #       setup_hex(center, size)
@@ -14,16 +14,16 @@ module HexagonalTiling
     #     
     #   end
     #
-    #   hex = MyHexagon.new(HexagonalTiling::Point.new(1, 2), 0.5)
+    #   hex = MyHexagon.new(Hexagonly::Point.new(1, 2), 0.5)
     #   hex.hex_corners # => an array containing all 6 corners of the hexagon
-    #   hex.contains?(HexagonalTiling::Point.new(1, 2)) # => true
-    #   hex.contains?(HexagonalTiling::Point.new(3, 3)) # => false
+    #   hex.contains?(Hexagonly::Point.new(1, 2)) # => true
+    #   hex.contains?(Hexagonly::Point.new(3, 3)) # => false
     module Methods
 
-      include HexagonalTiling::Polygon::Methods
+      include Hexagonly::Polygon::Methods
       
       def self.included(base)
-        base.extend(HexagonalTiling::Polygon::ClassMethods)
+        base.extend(Hexagonly::Polygon::ClassMethods)
         base.poly_points_method :hex_corners
 
         base.extend(ClassMethods)
@@ -36,30 +36,33 @@ module HexagonalTiling
         # array of hexagons. If params[:grab_points] is true, every hexagon created 
         # on the way grabs all the points contained within.
         #
-        # @param points [Array<HexagonalTiling::Point>] the boundries for the generated hexagons
+        # @param points [Array<Hexagonly::Point>] the boundries for the generated hexagons
         #   or an Array of points that will be "grabbed" by the generated hexagons 
         #   (see @params[:grap_points])
         # @param hex_size [Float] the size of the generated hexagons (width / 2)
         # @param [Hash] params additional parameters
-        # @option params [false, true] :grab_points wether to "grab" points - 
+        # @option params [false, true] :grab_points whether to "grab" points - 
         #   stores included points unter hex#collected_points and excluded points
         #   under hex#rejected_points
+        # @option params [false, true] :reject_empty when :grab_points is enabled
+        #   settings this option to true removes empty hexagons from the results
         # @option params [Class] :hexagon_class the class used to instanciate new hexagons
         # @option params [Class] :point_class the class used to instanciate hexagon center points
         #
-        # @return [Array<HexagonalTiling::Hexagon] an array of hexagons
+        # @return [Array<Hexagonly::Hexagon] an array of hexagons
         def pack(points, hex_size, params = {})
           return [] if points.nil? || points.empty?
 
           hexagons = []
-          space = HexagonalTiling::Space.new(points)
+          space = Hexagonly::Space.new(points)
 
           h_hexagon_count = ((space.east.x_coord - space.west.x_coord) / (hex_size * 1.5)).abs.ceil
           v_hexagon_count = ((space.north.y_coord - space.south.y_coord) / (hex_size * Math.cos(Math::PI / 6) * 2.0)).abs.ceil + 1
 
-          point_class = params.fetch(:point_class, HexagonalTiling::Point)
-          hexagon_class = params.fetch(:hexagon_class, HexagonalTiling::Hexagon)
+          point_class = params.fetch(:point_class, Hexagonly::Point)
+          hexagon_class = params.fetch(:hexagon_class, Hexagonly::Hexagon)
           grab_points = params.fetch(:grab_points, false)
+          reject_empty = params.fetch(:reject_empty, false)
 
           north_west = point_class.new.tap{ |p| p.set_coords(space.west.x_coord, space.north.y_coord) }
           hexagons << hex = hexagon_class.new.tap{ |h| h.setup_hex(north_west, hex_size); h.grab(points) if grab_points }
@@ -76,6 +79,10 @@ module HexagonalTiling
             hexagons << hex = first_hex.south_hexagon(params) if i < v_hexagon_count - 1
           end
 
+          if grab_points && reject_empty
+            hexagons.reject!{ |hex| hex.collected_points.empty? }
+          end
+
           hexagons
         end
 
@@ -85,7 +92,7 @@ module HexagonalTiling
 
       # Initializes the hexagon.
       #
-      # @param hex_center [HexagonalTiling::Point] the center of the hexagon
+      # @param hex_center [Hexagonly::Point] the center of the hexagon
       # @param hex_size [Float] the size of the hexagon (horizontal width / 2)
       def setup_hex(hex_center, hex_size)
         @hex_center, @hex_size = hex_center, hex_size
@@ -189,7 +196,7 @@ module HexagonalTiling
       private
 
       def hex_point_class
-        @hex_center.nil? ? HexagonalTiling::Point : @hex_center.class
+        @hex_center.nil? ? Hexagonly::Point : @hex_center.class
       end
 
     end

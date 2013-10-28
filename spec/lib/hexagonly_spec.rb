@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe HexagonalTiling do
+describe Hexagonly do
   
 end

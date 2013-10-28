@@ -1,9 +1,9 @@
-module HexagonalTiling
+module Hexagonly
   class Space
 
     attr_reader :points, :north, :west, :south, :east, :height, :width, :center
 
-    # @param [Array<Point>] points an array of points that make up the space
+    # @param [Array<Hexagonly::Point>] points an array of points that make up the space
     def initialize(points)
       @points = points
       refresh
@@ -30,7 +30,7 @@ module HexagonalTiling
       compute_boundries if @north.nil? || @west.nil? || @south.nil? || @east.nil?
       @height = @north.y_coord - @south.y_coord
       @width = @east.x_coord - @west.x_coord
-      @center = HexagonalTiling::Point.new(@width / 2 + @west.x_coord, @height / 2 + @south.y_coord)
+      @center = Hexagonly::Point.new(@width / 2 + @west.x_coord, @height / 2 + @south.y_coord)
     end
 
   end

@@ -1,13 +1,14 @@
-# HexagonalTiling
+# Hexagonly
 
-Provides helper classes for performing regular, flat-topped hexagonal tiling.
+Provides helper classes for performing regular, flat-topped hexagonal tiling and other polygon-related operations.
+
 **Work in progress**
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'hexagonal_tiling'
+    gem 'hexagonly'
 
 And then execute:
 
@@ -15,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install hexagonal_tiling
+    $ gem install hexagonly
 
 ## Usage
 

@@ -1,4 +1,4 @@
-module HexagonalTiling
+module Hexagonly
   class Polygon
 
     # Adds Polygon methods to an object. The Polygon corners are read via
@@ -9,7 +9,7 @@ module HexagonalTiling
     # @example
     #   class MyPolygon
     #     
-    #     include HexagonalTiling::Polygon::Methods
+    #     include Hexagonly::Polygon::Methods
     #     poly_points_method :corners
     #     
     #     attr_reader :corners
@@ -67,9 +67,9 @@ module HexagonalTiling
       # and appends them to @collected_points. All rejected Points are stored 
       # under @rejected_points (if you want to pass the to other objects).
       #
-      # @param points [Array<HexagonalTiling::Point>]
+      # @param points [Array<Hexagonly::Point>]
       #
-      # @return [Array<HexagonalTiling::Point] the grabed points
+      # @return [Array<Hexagonly::Point] the grabed points
       def grab(points)
         parts = points.partition{ |p| contains?(p) }
         @collected_points ||= []
@@ -85,7 +85,7 @@ module HexagonalTiling
 
     attr_accessor :poly_points
 
-    # @param [Array<HexagonalTiling::Point>] poly_points the points that make up the polygon
+    # @param [Array<Hexagonly::Point>] poly_points the points that make up the polygon
     def initialize(poly_points)
       @poly_points = poly_points
     end

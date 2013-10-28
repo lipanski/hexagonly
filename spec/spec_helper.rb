@@ -1,4 +1,4 @@
-require 'hexagonal_tiling'
+require 'hexagonly'
 require 'factory_girl'
 
 FactoryGirl.find_definitions

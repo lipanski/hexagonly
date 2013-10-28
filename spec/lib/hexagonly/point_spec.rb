@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe HexagonalTiling::Point do
+describe Hexagonly::Point do
   
   describe "#x_coord and #y_coord" do
     
@@ -9,7 +9,7 @@ describe HexagonalTiling::Point do
       context "if #x and #y are not defined" do
         before(:all) do
           class TestPoint
-            include HexagonalTiling::Point::Methods
+            include Hexagonly::Point::Methods
           end
         end
 
@@ -21,7 +21,7 @@ describe HexagonalTiling::Point do
       context "if #x and #y are defined" do
         before(:all) do
           class TestPoint
-            include HexagonalTiling::Point::Methods
+            include Hexagonly::Point::Methods
             attr_accessor :x, :y
             def initialize(x, y); @x, @y = x, y; end
           end
@@ -39,7 +39,7 @@ describe HexagonalTiling::Point do
       context "if given coordinate methods are not defined" do
         before(:all) do
           class TestPoint
-            include HexagonalTiling::Point::Methods
+            include Hexagonly::Point::Methods
             x_y_coord_methods :a, :b
           end
         end
@@ -52,7 +52,7 @@ describe HexagonalTiling::Point do
       context "if given coordinate methods are defined" do
         before(:all) do
           class TestPoint
-            include HexagonalTiling::Point::Methods
+            include Hexagonly::Point::Methods
             x_y_coord_methods :a, :b
             attr_accessor :a, :b
             def initialize(a, b); @a, @b = a, b; end

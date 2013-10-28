@@ -1,4 +1,4 @@
-module HexagonalTiling
+module Hexagonly
   class Point
 
     # Adds Point methods to an object. Any Point bears x and y coordinates,
@@ -10,7 +10,7 @@ module HexagonalTiling
     # @example
     #   class MyPoint
     #     
-    #     include HexagonalTiling::Point::Methods
+    #     include Hexagonly::Point::Methods
     #     # The x coordinate will be read from #a and the y coordinate will be read from #b
     #     x_y_coord_methods :a, :b
     #     

@@ -1,15 +1,15 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'hexagonal_tiling/version'
+require 'hexagonly/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "hexagonal_tiling"
-  spec.version       = HexagonalTiling::VERSION
+  spec.name          = "hexagonly"
+  spec.version       = Hexagonly::VERSION
   spec.authors       = ["Florin Lipan"]
   spec.email         = ["lipanski@gmail.com"]
   spec.description   = %q{Hexagonal tiling in Ruby.}
-  spec.summary       = %q{Provides helper classes for performing regular, flat-topped hexagonal tiling.}
+  spec.summary       = %q{Provides helper classes for performing regular, flat-topped hexagonal tiling and other polygon operations.}
   spec.homepage      = ""
   spec.license       = "MIT"
 

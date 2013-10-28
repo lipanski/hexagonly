@@ -1,6 +1,6 @@
 require 'json'
 
-module HexagonalTiling
+module Hexagonly
   class GeoJson
 
     attr_reader :features
