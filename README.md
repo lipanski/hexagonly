@@ -213,13 +213,9 @@ puts hexagons[0].collected_points[0].class # => Hexagonly::Point or your custom 
 
 ### Examples with geographical coordinates
 
-This one applies hexagonal tiling & grabbing over a collection of 100 points. The ``:reject_empty`` option is disabled:
+1. [This one](https://github.com/lipanski/hexagonly/blob/master/examples/1.geojson) applies hexagonal tiling & grabbing over a collection of 100 points. The ``:reject_empty`` option is disabled.
 
-<script src="https://embed.github.com/view/geojson/lipanski/hexagonly/blob/master/examples/1.geojson"></script>
-
-Same collection, but the ``:reject_empty`` option has been enabled:
-
-<script src="https://embed.github.com/view/geojson/lipanski/hexagonly/blob/master/examples/2.geojson"></script>
+2. [This example](https://github.com/lipanski/hexagonly/blob/master/examples/2.geojson) uses the same collection, but the ``:reject_empty`` option has been enabled.
 
 ### More examples
 
