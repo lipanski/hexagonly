@@ -1,4 +1,4 @@
-Copyright (c) 2013 lipanski
+Copyright (c) 2013 Florin LIPAN
 
 MIT License
 
