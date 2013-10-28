@@ -180,19 +180,6 @@ module Hexagonly
         corners
       end
 
-      def to_geojson
-        corner_points = hex_corners.map{ |p| [p.x_coord, p.y_coord] }
-        corner_points << corner_points.last
-        {
-          :type => "Feature",
-          :geometry => {
-            :type => "Polygon",
-            :coordinates => [corner_points]
-          },
-          :properties => nil
-        }
-      end
-
       private
 
       def hex_point_class

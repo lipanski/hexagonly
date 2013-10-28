@@ -87,6 +87,7 @@ module Hexagonly
       #   [x_coord, y_coord]
       # end
 
+      attr_accessor :geo_properties
       def to_geojson
         {
           :type => "Feature",
@@ -94,7 +95,7 @@ module Hexagonly
             :type => "Point",
             :coordinates => [x_coord, y_coord]
           },
-          :properties => nil
+          :properties => geo_properties
         }
       end
 

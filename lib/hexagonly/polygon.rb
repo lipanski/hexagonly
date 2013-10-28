@@ -79,6 +79,22 @@ module Hexagonly
         parts[0]
       end
 
+      attr_accessor :geo_properties
+      attr_accessor :geo_style
+      def to_geojson
+        points = poly_points.map{ |p| [p.x_coord, p.y_coord] }
+        points << points.last
+        {
+          :type => "Feature",
+          :geometry => {
+            :type => "Polygon",
+            :coordinates => [points]
+          },
+          :style => geo_style,
+          :properties => geo_properties
+        }
+      end
+
     end
 
     include Methods
