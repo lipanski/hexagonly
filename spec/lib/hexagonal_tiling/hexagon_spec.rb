@@ -123,13 +123,73 @@ describe HexagonalTiling::Hexagon do
 
   describe ".pack" do
 
-    context "when using default classes" do
+    context "when using default classes and point grabbing" do
       let(:points) { 100.times.map{ build(:point) } }
       let(:hex_size) { 0.15 }
-      subject { HexagonalTiling::Hexagon.pack(points, hex_size, { grab_points: true }) }
+      subject { HexagonalTiling::Hexagon.pack(points, hex_size, { :grab_points => true }) }
       it { subject.class.should == Array }
       it { subject.each{ |hex| hex.collected_points.each{ |p| hex.contains?(p).should == true } } } 
       it { subject.inject([]){ |arr, hex| arr += hex.collected_points }.size.should == points.size }
+    end
+
+    context "when using custom classes" do
+      before(:all) do
+        class CustomPoint
+          include HexagonalTiling::Point::Methods
+          x_y_coord_methods :a, :b
+
+          attr_accessor :a, :b
+          def initialize(*args); set_coords(*args) if args.size == 2; end
+        end
+
+        class CustomHexagon
+          include HexagonalTiling::Hexagon::Methods
+
+          def initialize(*args); setup_hex(center, size) if args.size == 2; end
+        end
+      end
+      let(:custom_boundries) { [[22, 46], [24, 48]].map{ |x, y| CustomPoint.new(x, y) } }
+      let(:hex_size) { 0.15 }
+      let(:params) { { :hexagon_class => CustomHexagon, :point_class => CustomPoint } }
+      subject{ HexagonalTiling::Hexagon.pack(custom_boundries, hex_size, params) }
+      it { subject.inject(0){ |sum, hex| sum += custom_boundries.inject(0){ |subsum, p| hex.contains?(p) ? subsum += 1 : subsum } }.should == custom_boundries.size }
+      it { subject.each{ |hex| hex.class.should == CustomHexagon } }
+      it { subject.each{ |hex| hex.hex_center.class.should == CustomPoint } }
+    end
+
+    context "when using custom classes with mixed points and point grabbing" do
+      before(:all) do
+        class Cheese
+          include HexagonalTiling::Point::Methods
+          x_y_coord_methods :a, :b
+
+          attr_accessor :a, :b
+          def initialize(*args); set_coords(*args) if args.size == 2; end
+        end
+
+        class Salami
+          include HexagonalTiling::Point::Methods
+          x_y_coord_methods :a, :b
+
+          attr_accessor :a, :b
+          def initialize(*args); set_coords(*args) if args.size == 2; end
+        end
+
+        class Pizza
+          include HexagonalTiling::Hexagon::Methods
+
+          def initialize(*args); setup_hex(center, size) if args.size == 2; end
+        end
+      end
+      let(:points) { 100.times.map{ [Cheese, Salami].sample.new(generate(:x), generate(:y)) } }
+      let(:hex_size) { 0.15 }
+      let(:params) { { :hexagon_class => Pizza, :grab_points => true } }
+      subject{ HexagonalTiling::Hexagon.pack(points, hex_size, params) }
+      it { subject.class.should == Array }
+      it { subject.each{ |hex| hex.class.should == Pizza } }
+      it { subject.each{ |hex| hex.collected_points.each{ |p| hex.contains?(p).should == true } } } 
+      it { subject.inject([]){ |arr, hex| arr += hex.collected_points }.size.should == points.size }
+      it { subject.each{ |hex| hex.collected_points.each{ |p| [Cheese, Salami].should include(p.class) } } }
     end
 
   end

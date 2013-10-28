@@ -37,7 +37,7 @@ module HexagonalTiling
         # on the way grabs all the points contained within.
         #
         # @param points [Array<HexagonalTiling::Point>] the boundries for the generated hexagons
-        #   or an Array of points that will be "grabed" by the generated hexagons 
+        #   or an Array of points that will be "grabbed" by the generated hexagons 
         #   (see @params[:grap_points])
         # @param hex_size [Float] the size of the generated hexagons (width / 2)
         # @param [Hash] params additional parameters
@@ -45,6 +45,7 @@ module HexagonalTiling
         #   stores included points unter hex#collected_points and excluded points
         #   under hex#rejected_points
         # @option params [Class] :hexagon_class the class used to instanciate new hexagons
+        # @option params [Class] :point_class the class used to instanciate hexagon center points
         #
         # @return [Array<HexagonalTiling::Hexagon] an array of hexagons
         def pack(points, hex_size, params = {})
@@ -56,7 +57,7 @@ module HexagonalTiling
           h_hexagon_count = ((space.east.x_coord - space.west.x_coord) / (hex_size * 1.5)).abs.ceil
           v_hexagon_count = ((space.north.y_coord - space.south.y_coord) / (hex_size * Math.cos(Math::PI / 6) * 2.0)).abs.ceil + 1
 
-          point_class = points.first.class
+          point_class = params.fetch(:point_class, HexagonalTiling::Point)
           hexagon_class = params.fetch(:hexagon_class, HexagonalTiling::Hexagon)
           grab_points = params.fetch(:grab_points, false)
 
@@ -111,6 +112,7 @@ module HexagonalTiling
       # @return [true|false]
       def loosely_contains?(point)
         raise "Call #setup_hex first!" if @hex_center.nil? || @hex_size.nil?
+
         ((point.x_coord - @hex_center.x_coord).abs <= @hex_size) && ((point.y_coord - @hex_center.y_coord).abs <= hex_v_size)
       end
 
@@ -159,6 +161,7 @@ module HexagonalTiling
       #   the 6 corners of the hexagon
       def hex_corners
         raise "Call #setup_hex first!" if @hex_center.nil? || @hex_size.nil?
+
         corners = []
         (0..5).each do |i|
           angle = 2 * Math::PI / 6 * i
