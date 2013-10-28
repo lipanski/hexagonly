@@ -11,7 +11,7 @@ Circles would have been a good option for grouping objects in a 2-dimensional sp
 circles are not really *tileable*.
 **Hexagons**, on the other hand, combine properties of the two shapes: they are easily tileable and have (sort of) a radius.
 
-I've tested this on my map project, but I guess it should work with **2D games** as well, or anything else that requires tiling or polygon-related operations.
+I've tested this on my project with > 5000 points, but I guess it should work with **2D games** as well, or anything else that requires tiling or polygon-related operations.
 
 ## Features
 
@@ -58,7 +58,7 @@ There are 2 ways for defining Point objects:
 2. By using your custom class (e.g. think ActiveRecord) and including ``Hexagonly::Point::Methods`` 
 inside your class definition. Then you would assign your own accessors as coordinate getters and setters.
 This is accomplished via the class method ``x_y_coord_methods`` which takes two arguments: the names of the x and y coordinate accessors.
-The ``x_y_coord_methods`` defaults to ``:x`` and ``:y``.
+The ``x_y_coord_methods`` method defaults to ``:x`` and ``:y``.
 
   ```ruby
   class MyCustomPoint
@@ -118,7 +118,7 @@ The ``poly_points_method`` method defaults to ``:poly_points``.
 
 ### Hexagons
 
-Hexagons inherit all methods of Polygons. There are 2 ways of creating new Hexagons:
+Hexagons inherit all methods from Polygons. There are 2 ways of creating new Hexagons:
 
 1. By using the pre-defined ``Hexagonly::Hexagon`` class:
    
@@ -152,16 +152,17 @@ Hexagons inherit all methods of Polygons. There are 2 ways of creating new Hexag
 
 ### Hexagonal tiling
 
-You start by defining your boundries. Boundries are basically a collection of 2 or more Hexagonaly::Point objects or objects including ``Hexagonly::Point::Methods``:
+You start by defining your boundries. Boundries are basically a collection of 2 or more ``Hexagonly::Point`` objects or objects including ``Hexagonly::Point::Methods``:
 
 ```ruby
+# Use the default Point class
 boundries = [
   Hexagonly::Point.new(1, 2),
   Hexagonly::Point.new(4, 5),
   ...
 ]
 
-# Or you can use your custom Point class...
+# Or use a custom class that includes Hexagonly::Point::Methods
 boundries = [
   MyCustomPoint.new(1, 2),
   MyCustomPoint.new(4, 5),
@@ -170,15 +171,15 @@ boundries = [
 ```
 
 Once you've defined your boundries, you can pass them to the ``Hexagonly::Hexagon.pack`` method. This takes 3 arguments:
-- the *boundries* or *points* that mark your hexagon field
-- half of the desired width of your hexagons (the distance from the center to the left / right boundries)
-- a *Hash* of additional parameters:
-  - ``:hexagon_class``: the class used to instanciate new Hexagons. Defaults to ``Hexagonly::Hexagon``. If you are
+- The *boundries* or *points* that mark your hexagon field.
+- The distance from the center to the left / right boundries (half of the desired width of your hexagons).
+- A *Hash* of additional parameters:
+  - ``:hexagon_class``: The class used to instanciate new Hexagons. Defaults to ``Hexagonly::Hexagon``. If you are
   using custom Hexagon classes, you should include your class here.
-  - ``:point_class``: the class used to instanciate Hexagon center points. Defaults to ``Hexagonly::Point``.
-  - ``:grab_points``: a boolean, determining whether the first argument (points / boundries) will also be used to collect
+  - ``:point_class``: The class used to instanciate Hexagon **center** points. Defaults to ``Hexagonly::Point``.
+  - ``:grab_points``: A boolean, determining whether the first argument (points / boundries) will also be used to collect
   contained points for every generated hexagon (see next category).
-  - ``:reject_empty``: a boolean, determining whether generated hexagons with no collected points should be removed from
+  - ``:reject_empty``: A boolean, determining whether generated hexagons with no collected points should be removed from
   the result. Only works if ``:grab_points`` is enabled (see next category).
 
 ```ruby
@@ -248,9 +249,14 @@ ingredients = [
   ...
 ]
 
-# And we want to create hexagonal pizzas out of them, by just laying the dough on top and removing the extra dough
+# And we want to create hexagonal pizzas out of them, 
+# by just laying the dough on top and removing the extra dough
 pizza_size = 1.0
-pizzas = Hexagonly::Hexagon.pack(ingredients, pizza_size, { :hexagon_class => Pizza, :grab_points => true, :reject_empty => true })
+pizzas = Hexagonly::Hexagon.pack(ingredients, pizza_size, { 
+  :hexagon_class => Pizza, 
+  :grab_points => true, 
+  :reject_empty => true }
+)
 
 puts pizzas[0].class # => Pizza
 puts pizzas[0].collected_points[0].class # => Salami or Cheese
