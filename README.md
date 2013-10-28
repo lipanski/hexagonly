@@ -44,6 +44,114 @@ Or install it yourself as:
 
 ## Usage
 
+### Points
+
+There are 3 ways for defining Point objects:
+
+1. By using the pre-defined ``Hexagonly::Point`` class: 
+
+  ```ruby
+  point = Hexagonly::Point.new(1, 2)
+  
+  puts point.x_coord # => 1
+  puts point.y_coord # => 2
+  ```
+
+2. By using your custom class (e.g. think ActiveRecord) and including ``Hexagonly::Point::Methods`` 
+inside your class definition. Then you'll need to supply your class with :x and :y accessors.
+
+  ```ruby
+  class MyCustomPoint
+    include Hexagonly::Point::Methods
+    
+    attr_accessor :x, :y
+    def initialize(x, y)
+      @x, @y = x, y
+    end
+  end
+  
+  point = MyCustomPoint.new(1, 2)
+  
+  puts point.x_coord # => 1
+  puts point.y_coord # => 2
+  ```
+  
+3. The last and most customizable method would be to use your custom class and have your own attributes work as coordinate getters and setters.
+This is accomplished via the class method ``x_y_coord_methods`` which takes two arguments: the names of the x and y coordinate accessors.
+
+  ```ruby
+  class MyCustomPoint
+    include Hexagonly::Point::Methods
+    
+    # Sets accessors :a and :b as coordinate accessors
+    x_y_coord_methods :a, :b
+    
+    attr_accessor :a, :b
+    def initialize(a, b)
+      @a, @b = a, b
+    end
+  end
+  
+  point = MyCustomPoint.new(1, 2)
+  
+  puts point.x_coord # => 1
+  puts point.y_coord # => 2
+  ```
+
+### Poylgons
+
+The same 3 ways of instanciating apply to Polygons as well:
+
+1. By using the pre-defined ``Hexagonly::Polygon`` class:
+   
+   ```ruby
+   corners = [ Hexagonly::Point(2, 1), Hexagonly::Point(5, 5), Hexagonly::Point(6, 1), ... ]
+   poly = Hexagonly::Polygon(corners)
+
+   puts poly.poly_points # => corners...
+   puts poly.contains?(Hexagonly::Point(4, 2)) # => true
+   ```
+   
+2. By using custom classes, which include ``Hexagonly::Polygon::Methods`` and create accessors for ``:poly_points``:
+
+  ```ruby
+  class MyCustomPolygon
+    include Hexagonly::Polygon
+    
+    attr_accessor :poly_points
+    def initialize(corners)
+      @poly_points = corners
+    end
+  end
+  
+  puts poly.poly_points # => corners...
+  puts poly.contains?(Hexagonly::Point(4, 2)) # => true
+  ```
+  
+3. By using custom classes and a custom corner accessor, set with the class method ``poly_points_method``:
+  
+  
+  ```ruby
+  class MyCustomPolygon
+    include Hexagonly::Polygon
+    
+    # Sets :corners as the polygon corners accessor
+    poly_points_method :corners
+    
+    attr_accessor :corners
+    def initialize(corners)
+      @corners = corners
+    end
+  end
+  
+  puts poly.poly_points # => corners...
+  puts poly.contains?(Hexagonly::Point(4, 2)) # => true
+  ```
+
+### Hexagons
+
+
+
 ### Hexagonal tiling
 
 You start by defining your boundries. Boundries are basically an Array of Hexagonaly::Point objects (2 or more).
