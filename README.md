@@ -2,17 +2,6 @@
 
 Provides helper classes for performing flat-topped hexagonal tiling and other polygon-related operations.
 
-## Motivation
-
-A personal project required me to **group geographical coordinates** on a map, compute different stats for individual groups 
-and display those stats in such a way that made them visually identify their groups.
-Squares and rectangles didn't really work for me, because different points on the boundries aren't equally distanced to the center.
-Circles would have been a good option for grouping objects in a 2-dimensional space, but then again
-circles are not really *tileable*.
-**Hexagons**, on the other hand, combine properties of the two shapes: they are easily tileable and have (sort of) a radius.
-
-I've tested this on my project with > 5000 points, but I guess it should work with **2D games** as well, or anything else that requires tiling or polygon-related operations.
-
 ## Features
 
 - Currently supported shapes: Point, Polygon, Hexagon.
@@ -23,6 +12,7 @@ I've tested this on my project with > 5000 points, but I guess it should work wi
 - **Hexagonal tiling & collecting objects on the way**: generate hexagons to match the boundries of a given collection of Points (a *space*), then store contained Points (or custom objects) for every Hexagon.
 - Convert shapes (Polygon, Hexagon, Point) and mixed collections of shapes to **GeoJson**.
 - For every defined shape you can either use pre-defined classes or use your own custom classes, by including the appropriate **Hexagonly shape module**.
+- RSpec test suite.
 
 The gem currently supports *flat-topped* hexagons only. For *pointy-topped* hexagons just place a bug request and I'll look into it.
 
@@ -267,6 +257,17 @@ pizzas = Hexagonly::Hexagon.pack(ingredients, pizza_size, {
 puts pizzas[0].class # => Pizza
 puts pizzas[0].collected_points[0].class # => Salami or Cheese
 ```
+
+## Motivation
+
+A personal project required me to **group geographical coordinates** on a map, compute different stats for individual groups 
+and display those stats in such a way that made them visually identify their groups.
+Squares and rectangles didn't really work for me, because different points on the boundries aren't equally distanced to the center.
+Circles would have been a good option for grouping objects in a 2-dimensional space, but then again
+circles are not really *tileable*.
+**Hexagons**, on the other hand, combine properties of the two shapes: they are easily tileable and have (sort of) a radius.
+
+I've tested this on my project with > 5000 points, but I guess it should work with **2D games** as well, or anything else that requires tiling or polygon-related operations.
 
 ## Contributing
 
