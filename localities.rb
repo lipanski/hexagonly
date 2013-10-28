@@ -10,7 +10,7 @@ localities_csv.first(100).each do |row|
   points << Hexagonly::Point.new(row[2].to_f, row[1].to_f)
 end
 
-hexagons = Hexagonly::Hexagon.pack(points, 0.15, { grab_points: true })
+hexagons = Hexagonly::Hexagon.pack(points, 0.15, { grab_points: true, reject_empty: true })
 
 # Style features
 collected_points = []
