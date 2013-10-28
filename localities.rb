@@ -13,17 +13,20 @@ end
 hexagons = Hexagonly::Hexagon.pack(points, 0.15, { grab_points: true })
 
 # Style features
+collected_points = []
 hexagons.each do |hex|
   color = "%06x" % (rand * 0xffffff)
   hex.geo_style = { 'fill' => color, 'stroke-width' => 2, 'fill-opacity' => 0.5 }
-end
-points.each do |p|
-  p.geo_properties = { 'marker-size' => 'small', 'marker-color' => '#ff0000', 'marker-symbol' => 'circle' }
+  collected_points += hex.collected_points.map do |point|
+    point.tap do |p|
+      p.geo_properties = { 'marker-size' => 'small', 'marker-color' => color, 'marker-symbol' => 'circle' }
+    end
+  end
 end
 
 # Generate GeoJson
 geo = Hexagonly::GeoJson.new(hexagons)
-geo.add_features(points)
+geo.add_features(collected_points)
 
 # Output
 puts geo.to_json
