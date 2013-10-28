@@ -211,6 +211,16 @@ puts hexagons[0].collected_points # => all objects from the points variable cont
 puts hexagons[0].collected_points[0].class # => Hexagonly::Point or your custom point class
 ```
 
+### Examples with geographical coordinates
+
+This one applies hexagonal tiling & grabbing over a collection of 100 points. The ``:reject_empty`` option is disabled:
+
+<script src="https://embed.github.com/view/geojson/lipanski/hexagonly/blob/master/examples/1.geojson"></script>
+
+Same collection, but the ``:reject_empty`` option has been enabled:
+
+<script src="https://embed.github.com/view/geojson/lipanski/hexagonly/blob/master/examples/2.geojson"></script>
+
 ### More examples
 
 While tiling and grabbing objects, you can also mix classes in your ``points`` collection, as long as they are
