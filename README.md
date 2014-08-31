@@ -1,4 +1,5 @@
 # Hexagonly
+[![Gem Version](https://badge.fury.io/rb/hexagonly.svg)](http://badge.fury.io/rb/hexagonly)
 
 Provides helper classes for performing flat-topped hexagonal tiling and other polygon-related operations.
 
